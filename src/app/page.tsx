@@ -9,9 +9,12 @@ export default function Home() {
     <div className="bg-neutral-50 text-gray-900 min-h-screen" >
       <nav className="bg-white shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">Delta Club</h1>
+          <a href={"/"} 
+              className="text-2xl font-bold text-blue-600">
+                  Delta Club
+            </a>
           <div className="flex items-center space-x-6">
-            <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
+            <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
             <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
             <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
               Sign In
@@ -28,7 +31,7 @@ export default function Home() {
           <h1 className="text-5xl font-bold">Volunteer Today</h1>
           <p className="text-xl mt-4">Find opportunities to volunteer with Delta Club</p>
           <a
-            href="#events"
+            href="events"
             className="border-2 border-blue-600 mt-6 bg-blue-600 px-6 py-3 rounded-lg text-lg hover:bg-white hover:text-blue-600 transition hover:border-blue-600"
           >
             View Events

@@ -61,13 +61,16 @@ export default function Home() {
     }, [])
 
     return <div className="bg-white">
-                <nav className="bg-white shadow-lg p-4">
+                <nav className="bg-white shadow-md p-4">
                     <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-blue-600">Delta Club</h1>
+                    <a href={"/"} 
+                        className="text-2xl font-bold text-blue-600">
+                            Delta Club
+                        </a>
                     <div className="flex items-center space-x-6">
-                        <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-                        <a href="#" className="text-gray-700 hover:text-blue-600 text-lg invisible">Planner</a>
-                        <button className="invisible px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg active:translate-y-1 active:shadow-none transition-all">
+                        <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
+                        <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
+                        <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
                         Sign In
                         </button>
                     </div>
