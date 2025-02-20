@@ -114,7 +114,7 @@ export default function Home() {
                         {
                             events === 'loading' 
                             ? <div className="text-black">Loading...</div>
-                            : events.map(event => (<div className='break-inside mb-4'>
+                            : events.map(event => (<div className='break-inside mb-4' key={`event-${event.id}`}>
                                 <Event event={event}/>
                                 </div>
                             ))

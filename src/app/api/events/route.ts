@@ -4,23 +4,7 @@ import Airtable from 'airtable'
 import humanizeDuration from "humanize-duration"
 import { DELTA_CLUB_BASE_ID, DELTA_CLUB_EVENTS_TABLE_ID } from "../constants"
 
-// some fake events for testing
-const EVENTS = [ 
-    {
-        name: "League with Matt",
-        committee: 'Fun',
-        hours: '1 hour',   
-        description: 'Playing a super fun game + climb past i3!'
-    },
-    {
-        name: 'Robotics',
-        committee: 'Extra fun!',
-        hours: '2 hours',
-        description: 'try not to get tilted at an inanimate object!'
-    }
-]
-
-export async function GET(request: Request) {
+export async function GET() {
     console.log("In route", )
 
     const airtable = new Airtable({ apiKey: process.env['AIRTABLE_API_KEY'] })
