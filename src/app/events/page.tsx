@@ -66,16 +66,16 @@ export default function Home() {
                     <h1 className="text-2xl font-bold text-blue-600">Delta Club</h1>
                     <div className="flex items-center space-x-6">
                         <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-                        <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Planner</a>
-                        <button className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg active:translate-y-1 active:shadow-none transition-all">
+                        <a href="#" className="text-gray-700 hover:text-blue-600 text-lg invisible">Planner</a>
+                        <button className="invisible px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg active:translate-y-1 active:shadow-none transition-all">
                         Sign In
                         </button>
                     </div>
                     </div>
                 </nav>
-
+                
                 <div className="flex">
-                <aside className="w-1/4 p-6 shadow-md rounded-lg sticky top-4 h-fit">
+                <aside className="w-1/4 p-6 shadow-md rounded-lg sticky top-4 h-fit invisible">
                     <h3 className="text-2xl font-semibold text-gray-800">Filter Events</h3>
 
                     <div className="mt-4">
@@ -110,7 +110,7 @@ export default function Home() {
                 <section className="w-3/4 pl-8">
                     <h3 className="text-3xl font-semibold text-blue-600 mt-10">Available Volunteer Events</h3>
                     <div className="container mx-auto">
-                        <div className="gap-8 mt-6 masonry sm:masonry-sm md:masonry-md">
+                        <div className="gap-8 mt-6 masonry sm:masonry-sm md:masonry-md mb-6">
                         {
                             events === 'loading' 
                             ? <div className="text-black">Loading...</div>

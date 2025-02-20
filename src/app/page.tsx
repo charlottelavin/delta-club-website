@@ -12,8 +12,8 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-blue-600">Delta Club</h1>
           <div className="flex items-center space-x-6">
             <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 text-lg">Planner</a>
-            <button className="px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
+            <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
+            <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
               Sign In
             </button>
           </div>
