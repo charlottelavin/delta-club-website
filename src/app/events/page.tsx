@@ -10,12 +10,17 @@ type Event = {
     hours: string
     description: string
     url: string
+    featured: boolean
 }
 
 
 function Event({event}: {event: Event}) {
     return <div>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
+            <div
+                className={`bg-white p-6 rounded-lg shadow-lg w-auto ${
+                    event.featured ? "border-2 border-blue-600" : ""
+                }`}
+            >
             <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg"></img>
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <p className="mt-2 text-black">{event.description}</p>
@@ -110,7 +115,7 @@ export default function Home() {
                 </aside>
 
 
-                <section className="w-3/4 pl-8">
+                <section className="w-3/4 pl-8 pr-8">
                     <h3 className="text-3xl font-semibold text-blue-600 mt-10">Available Volunteer Events</h3>
                     <div className="container mx-auto">
                         <div className="gap-8 mt-6 masonry sm:masonry-sm md:masonry-md mb-6">

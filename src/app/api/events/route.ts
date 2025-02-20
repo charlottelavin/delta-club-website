@@ -19,6 +19,9 @@ export async function GET() {
             ?  "Hours Vary"
             // Else, this is the value of `hours`
             : humanizeDuration(record.fields.Hours as number * 1000, { units: ["h"] });
+        const featured = !record.fields.Featured
+            ?  false
+            :  true
 
         return {
             name: record.fields.Name,
@@ -27,6 +30,7 @@ export async function GET() {
             hours: hours,
             url: record.fields.Link,
             id: record.id,
+            featured: record.fields.Featured,
         }
     })
 
