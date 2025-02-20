@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
+import Link from 'next/link'
 
 // Define the Event type
 type Event = {
@@ -70,9 +71,9 @@ export default function Home() {
         <div className="bg-white">
             <nav className="bg-white shadow-md p-4">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <a href="/" className="text-2xl font-bold text-blue-600">
+                    <Link href="/" className="text-2xl font-bold text-blue-600">
                         Delta Club
-                    </a>
+                    </Link>
                     <div className="flex items-center space-x-6">
                         <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
                         <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
