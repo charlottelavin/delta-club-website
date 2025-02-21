@@ -87,11 +87,11 @@ export default function Home() {
             <div className="flex p-8">
                 {/* Sidebar */}
                 <aside className="w-1/4 p-8 shadow-md rounded-lg sticky top-4 h-fit">
-                    <h3 className="text-2xl font-semibold text-gray-800">Filter Events</h3>
+                    <h3 className="text-2xl font-semibold text-blue-600">Filter Events</h3>
 
                     {/* Committee Filter */}
                     <div className="mt-4">
-                        <label className="block text-gray-700 font-semibold">Committee</label>
+                        <label className="block text-black font-semibold">Committee</label>
                         <select 
                             className="w-full mt-2 p-2 border rounded-lg text-black"
                             value={selectedCommittee}

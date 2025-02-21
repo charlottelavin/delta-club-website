@@ -1,12 +1,65 @@
+"use client"
+
 import Image from "next/image";
 import galleryImage from './images/ismael-paramo-Cns0h4ypRyA-unsplash.jpg'
 import galleryImage2 from './images/joel-muniz-A4Ax1ApccfA-unsplash.jpg'
 import galleryImage3 from './images/ray-sangga-kusuma-7uSrOyY1U0I-unsplash.jpg'
 import heroImage from './images/delta.jpg'
+import { useEffect, useState } from "react"
+
+type Event = {
+  id: string;
+  name: string;
+  committee: string;
+  hours: string;
+  description: string;
+  url: string;
+  featured: boolean;
+};
+
+
+function Event({event}: {event: Event}) {
+  return <div className={`${event.featured ? "" : "hidden"}`}>
+          <div className={`bg-white p-6 rounded-lg shadow-lg w-auto border-2 border-blue-600 max-w-96`}>
+              <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
+              <p className="mt-2 text-black">{event.description}</p>
+              {event.url
+                  ? <div className="my-4">
+                      <a href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="border-2 border-blue-600 text-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white active:translate-y-1 active:shadow-none transition-all">
+                              Sign Up
+                          </a>
+                      </div>
+                  : null}
+              <p className="mt-2 text-gray-500">{event.committee}, {event.hours}</p>
+          </div>
+
+
+      </div>
+}
 
 export default function Home() {
+  const [events, setEvents] = useState<Event[] | 'loading'>('loading')
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await fetch('/api/featured');
+            if (response.ok) {
+                const responseData: Event[] = await response.json();
+                // reduce the fetch later
+                const featuredEvents = responseData.filter(event => event.featured != null)
+                setEvents(featuredEvents);
+            } else {
+                console.error("Failed to fetch events");
+            }
+        }
+        fetchData();
+    }, []);
+  
   return (
-    <div className="bg-neutral-50 text-gray-900 min-h-screen" >
+    <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col items-stretch" >
       <nav className="bg-white shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <a href={"/"} 
@@ -32,7 +85,7 @@ export default function Home() {
           <p className="text-xl mt-4">Find opportunities to volunteer with Delta Club</p>
           <a
             href="events"
-            className="border-2 border-blue-600 mt-6 bg-blue-600 px-6 py-3 rounded-lg text-lg hover:bg-white hover:text-blue-600 transition hover:border-blue-600"
+            className="border-2 border-blue-600 mt-6 bg-blue-600 px-6 py-3 rounded-lg text-lg hover:bg-white hover:text-blue-600 transition hover:border-blue-600 font-bold"
           >
             View Events
           </a>
@@ -49,39 +102,42 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="events" className="py-16 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-semibold text-blue-600 text-center">Featured Events</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {[ 
-              { title: "Community Cleanup", desc: "Join us in keeping our community clean! Supplies provided.", date: "March 10", location: "Local Park" },
-              { title: "Food Drive", desc: "Help collect non-perishable food for families in need.", date: "March 15", location: "School Gym" },
-              { title: "Animal Shelter Visit", desc: "Spend time with rescue animals and assist shelter staff.", date: "March 20", location: "City Animal Shelter" }
-            ].map((event, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-2xl font-semibold">{event.title}</h3>
-                <p className="mt-2 text-gray-700">{event.desc}</p>
-                <p className="mt-2 text-gray-500">📅 {event.date} | 📍 {event.location}</p>
-              </div>
-            ))}
-          </div>
+      <div className="flex flex-col self-center bg-blue-100 text-center">
+        <h2 className="pt-16 text-4xl font-semibold text-blue-600">Featured Events</h2>
+        <div className="flex md:flex-cols-3 gap-10 mt-10 mb-16 mx-20">
+        {
+            events === 'loading'
+            ? <div className="text-black">Loading...</div>
+            : events.map(event => (<div className='break-inside' key={`event-${event.id}`}>
+                <Event event={event}/>
+                </div>
+            ))
+        }
         </div>
-      </section>
+      </div>
+
 
       <section id="hours" className="py-16 bg-white text-center">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="mx-auto px-6">
           <h2 className="text-4xl font-semibold text-blue-600">How to Record Hours</h2>
-          <p className="mt-4 text-lg">Follow these simple steps to ensure your volunteer hours are counted:</p>
-          <ul className="mt-6 space-y-4 text-lg text-gray-700">
-            <li>✅ Attend an approved Delta Club event.</li>
-            <li>✅ Sign in at the event location.</li>
-            <li>✅ Submit your volunteer log on the website.</li>
-            <li>✅ Get approval from the event supervisor.</li>
+          <p className="mt-4 text-xl justify-self-center">Follow these simple steps to ensure your volunteer hours are counted:</p>
+          <ul className="mt-6 space-y-4 text-lg text-gray-700 justify-self-center">
+            <li>✅ Sign up and attend a Delta Club event.</li>
+            <li>✅ Take pictures while completing your activity.</li>
+            <li>✅ Write a post on Unrulr about your event.</li>
+            <li>✅ Congrats! Your hours have been recorded!</li>
+            <div className="mt-6">
+              <a 
+              href={"https://tinyurl.com/unrulrpost"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 border-2 border-blue-600 text-blue-600 font-bold px-6 py-4 rounded-lg hover:bg-blue-600 hover:text-white active:translate-y-1 active:shadow-none transition-all">View Unrulr Post Guide</a>
+            </div>
           </ul>
         </div>
       </section>
 
-      <section id="gallery" className="py-16 bg-gray-100">
+      <section id="gallery" className="py-16 bg-blue-100">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-semibold text-blue-600 text-center">Gallery</h2>
           <div className="grid md:grid-cols-3 gap-4 mt-8">
