@@ -12,6 +12,7 @@ type Event = {
     description: string;
     url: string;
     featured: boolean;
+    address: string
 };
 
 function Event({ event }: { event: Event }) {
@@ -20,6 +21,7 @@ function Event({ event }: { event: Event }) {
             <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg"></img>
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <p className="mt-2 text-black">{event.description}</p>
+            <p className="mt-2 text-gray-600">{event.address}</p>
             {event.url && (
                 <div className="my-4">
                     <a href={event.url} 
@@ -106,7 +108,7 @@ export default function Home() {
                             <option value="Food Insecurity and Poverty">Food Insecurity and Poverty</option>
                             <option value="Health and Wellness">Health and Wellness</option>
                             <option value="Homelessness">Homelessness</option>
-                            <option value="Heroes and Justice">Heroes and Justice</option>
+                            <option value="Community and Culture">Community and Culture</option>
                         </select>
                     </div>
                 </aside>
