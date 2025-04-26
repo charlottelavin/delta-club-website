@@ -18,7 +18,7 @@ export async function GET() {
            // If hours == 0 then this is the value of `hours`
             ?  "Hours Vary"
             // Else, this is the value of `hours`
-            : humanizeDuration(Math.round((record.fields.Hours as number) * 100) / 100 * 1000, { units: ["h"] })
+            : humanizeDuration(record.fields.Hours as number, { maxDecimalPoints: 2 }) 
 
         return {
             name: record.fields.Name,
