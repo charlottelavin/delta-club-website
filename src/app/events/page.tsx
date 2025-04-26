@@ -78,7 +78,7 @@ export default function Home() {
                     </Link>
                     <div className="flex items-center space-x-6">
                         <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-                        <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
+                        <a href="contribute" className="text-gray-700 hover:text-blue-600 text-lg">Contribute</a>
                         <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
                             Sign In
                         </button>

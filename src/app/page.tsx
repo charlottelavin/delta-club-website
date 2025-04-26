@@ -6,6 +6,7 @@ import galleryImage2 from './images/joel-muniz-A4Ax1ApccfA-unsplash.jpg'
 import galleryImage3 from './images/ray-sangga-kusuma-7uSrOyY1U0I-unsplash.jpg'
 import heroImage from './images/delta.jpg'
 import { useEffect, useState } from "react"
+import Link from 'next/link'
 
 type Event = {
   id: string;
@@ -60,21 +61,20 @@ export default function Home() {
   
   return (
     <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col items-stretch" >
-      <nav className="bg-white shadow-md p-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <a href={"/"} 
-              className="text-2xl font-bold text-blue-600">
-                  Delta Club
-            </a>
-          <div className="flex items-center space-x-6">
-            <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-            <a href="#" className="invisible text-gray-700 hover:text-blue-600 text-lg">Planner</a>
-            <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
-              Sign In
-            </button>
-          </div>
-        </div>
-      </nav>
+        <nav className="bg-white shadow-md p-4">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+                <Link href="/" className="text-2xl font-bold text-blue-600">
+                    Delta Club
+                </Link>
+                <div className="flex items-center space-x-6">
+                    <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
+                    <a href="contribute" className="text-gray-700 hover:text-blue-600 text-lg">Contribute</a>
+                    <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </nav>
 
       <section className="relative w-full h-screen bg-cover bg-center">
         <div 
