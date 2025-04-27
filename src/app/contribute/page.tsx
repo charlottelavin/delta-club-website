@@ -26,7 +26,7 @@ export default function Home() {
         <section id="volunteer-suggestions" className="py-16">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl font-bold mb-6">Suggest a Volunteering Opportunity</h2>
-            <p className="mb-6">Have a great idea for a organization to partner with? We're always looking to add more events. Share your idea with us!</p>
+            <p className="mb-6">Have a great idea for a organization to partner with? We&apos;re always looking to add more events. Share your idea with us!</p>
             <a href="https://forms.office.com/r/89ipxvpdb7" target="_blank" className="inline-block bg-blue-600 text-white py-3 px-6 rounded-full hover:bg-blue-700">Submit a Suggestion</a>
           </div>
         </section>
@@ -42,7 +42,7 @@ export default function Home() {
         <section id="committee-leader" className="py-16">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl font-bold mb-6">Become a Committee Leader</h2>
-            <p className="mb-6">Committees drive our projects forward. As a leader, you'll guide a team, manage initiatives, and make an impact. Committees include Events, Outreach, Fundraising, and more.</p>
+            <p className="mb-6">Committees drive our projects forward. As a leader, you&apos;ll guide a team, manage initiatives, and make an impact. Committees include Events, Outreach, Fundraising, and more.</p>
             <a href="/apply-committee" className="inline-block bg-blue-600 text-white py-3 px-6 rounded-full hover:bg-blue-700">Lead a Committee</a>
           </div> 
           </section>
@@ -140,7 +140,6 @@ export default function Home() {
 
                         <div>
                             <h1 className="text-xl font-semibold text-gray-700 dark:text-white">What are the parking and public transport options?</h1>
-
                             <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident placeat, consequatur eveniet veritatis quos dignissimos beatae dolores exercitationem laboriosam officia magnam atque blanditiis illum doloremque magni ex corrupti tempora quis.
                             </p>
