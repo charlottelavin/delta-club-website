@@ -15,19 +15,64 @@ type Event = {
     address: string
 };
 
-function Event({ event }: { event: Event }) {
+type ModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+};
+  
+
+function Event({ event, isModalOpen, setIsModalOpen }: { event: Event; isModalOpen: boolean; setIsModalOpen: (open: boolean) => void }) {
+    function Modal({ isOpen, onClose}: ModalProps) {
+        if (!isOpen) return null; // Don't render if not open
+      
+        return (
+          <div
+            className="fixed inset-0 bg-gray bg-opacity-30 flex items-center justify-center z-50"
+            onClick={onClose}
+          >
+            <div
+              className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+            >
+              <h2 className="text-2xl font-bold mb-4">Product Title</h2>
+              <p className="mb-6">
+                {event.description}
+              </p>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Closes
+              </button>
+            </div>
+          </div>
+        );
+      }
     return (
         <div className={`bg-white p-6 rounded-lg shadow-lg w-auto ${event.featured ? "border-2 border-blue-600" : ""}`}>
-            <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg"></img>
+            <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg" />
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <p className="mt-2 text-black">{event.description}</p>
             <p className="mt-2 text-gray-600">{event.address}</p>
+            <div className="flex items-center justify-center mt-4">
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                    View
+                </button>
+
+                {/* Modal */}
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            </div>
             {event.url && (
                 <div className="my-4">
-                    <a href={event.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="border-2 border-blue-600 text-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all">
+                    <a
+                        href={event.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border-2 border-blue-600 text-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all"
+                    >
                         Sign Up
                     </a>
                 </div>
@@ -37,10 +82,12 @@ function Event({ event }: { event: Event }) {
     );
 }
 
+
 export default function Home() {
     const [events, setEvents] = useState<Event[] | 'loading'>('loading');
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [selectedCommittee, setSelectedCommittee] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -123,7 +170,7 @@ export default function Home() {
                             ) : filteredEvents.length > 0 ? (
                                 filteredEvents.map(event => (
                                     <div className="break-inside mb-4" key={`event-${event.id}`}>
-                                        <Event event={event} />
+                                        <Event event={event} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                                     </div>
                                 ))
                             ) : (
