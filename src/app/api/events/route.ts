@@ -29,6 +29,7 @@ export async function GET() {
             id: record.id,
             address: record.fields.Address,
             featured: record.fields.Featured,
+            age: record.fields.Age,
         }
     })
 

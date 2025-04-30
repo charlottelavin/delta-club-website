@@ -13,6 +13,7 @@ type Event = {
     url: string;
     featured: boolean;
     address: string
+    age: string
 };
 
 type ModalProps = {
@@ -24,7 +25,7 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
     if (!isOpen) return null; // Don't render if not open
   
     return (
-            <div className="fixed inset-0 bg-gray bg-opacity-30 flex items-center justify-center w-4/5 center self-center" onClick={onClose}>
+            <div className="fixed inset-0 bg-gray bg-opacity-30 flex items-center justify-center h-screen" onClick={onClose}>
                 <div className="bg-white p-6 rounded-lg shadow-2xl" >
                 <div className="mx-auto w-full px-4 sm:px-6 lg:px-0">
                     <div className="mx-auto grid grid-cols-1 gap-16 max-md:px-2 lg:grid-cols-2">
@@ -47,23 +48,34 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
                                 <rect width="26" height="26" rx="13" fill="#4F46E5" />
                                 <path d="M7.66669 12.629L10.4289 15.3913C10.8734 15.8357 11.0956 16.0579 11.3718 16.0579C11.6479 16.0579 11.8701 15.8357 12.3146 15.3913L18.334 9.37183" stroke="white" stroke-width="1.6" stroke-linecap="round" />
                             </svg>
-                            <span className="text-base font-normal text-gray-900">Age Range</span>
+                            <span className="text-base font-normal text-gray-900">{event.age}</span>
                             </li>
                             <li className="flex items-center gap-3">
                             <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="26" height="26" rx="13" fill="#4F46E5" />
                                 <path d="M7.66669 12.629L10.4289 15.3913C10.8734 15.8357 11.0956 16.0579 11.3718 16.0579C11.6479 16.0579 11.8701 15.8357 12.3146 15.3913L18.334 9.37183" stroke="white" stroke-width="1.6" stroke-linecap="round" />
                             </svg>
-                            <span className="text-base font-normal text-gray-900">Address</span>
+                            <span className="text-base font-normal text-gray-900">{event.address}</span>
                             </li>
                         </ul>
-                        <button className="flex w-full items-center justify-center rounded-[100px] bg-indigo-600 px-5 py-4 text-center text-lg font-semibold text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">Buy Now</button>
-                        </div>
+                        {event.url && (
+                            <div className="my-4">
+                                <a
+                                    href={event.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex w-full items-center justify-center rounded-[100px] bg-indigo-600 px-5 py-4 text-center text-lg font-semibold text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400"
+                                >
+                                    Sign Up
+                                </a>
+                            </div>
+                        )}
                         <button
                             onClick={onClose}
                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
                             Close
                         </button>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -75,34 +87,20 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
 function Event({ event, }: { event: Event;}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className={`bg-white p-6 rounded-lg shadow-lg w-auto ${event.featured ? "border-2 border-blue-600" : ""}`}>
+        <div className={`bg-white p-6 rounded-lg shadow-xl w-auto ${event.featured ? "border-2 border-blue-600" : ""}`}>
             <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg" />
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
-            <p className="mt-2 text-black">{event.description}</p>
-            <p className="mt-2 text-gray-600">{event.address}</p>
-            <div className="flex mt-4">
+            <p className="mt-2 text-gray-500">{event.committee}, {event.hours}</p>
+            <div className="flex mt-4 justify-center">
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    className="px-14 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     View
                 </button>
 
                 {/* Modal */}
                 <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={event}/>
             </div>
-            {event.url && (
-                <div className="my-4">
-                    <a
-                        href={event.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="border-2 border-blue-600 text-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition-all"
-                    >
-                        Sign Up
-                    </a>
-                </div>
-            )}
-            <p className="mt-2 text-gray-500">{event.committee}, {event.hours}</p>
         </div>
     );
 }
@@ -142,7 +140,7 @@ export default function Home() {
 
     return (
         <div className="bg-white">
-            <nav className="bg-white shadow-md p-4">
+            <nav className="bg-white shadow-xl p-4">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <Link href="/" className="text-2xl font-bold text-blue-600">
                         Delta Club
@@ -159,7 +157,7 @@ export default function Home() {
 
             <div className="flex p-8">
                 {/* Sidebar */}
-                <aside className="w-1/4 p-8 shadow-md rounded-lg sticky top-4 h-fit">
+                <aside className="w-1/4 p-8 shadow-xl rounded-lg sticky top-4 h-fit">
                     <h3 className="text-2xl font-semibold text-blue-600">Filter Events</h3>
 
                     {/* Committee Filter */}

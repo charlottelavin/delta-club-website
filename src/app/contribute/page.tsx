@@ -46,7 +46,7 @@ export default function Home() {
             <a href="/apply-committee" className="inline-block bg-blue-600 text-white py-3 px-6 rounded-full hover:bg-blue-700">Lead a Committee</a>
           </div> 
           </section>
-          <section className="bg-white dark:bg-gray-900">
+          <section className="bg-white dark:bg-gray-900 invisible">
             <div className="container px-6 py-12 mx-auto">
                 <h1 className="text-2xl font-semibold text-gray-800 lg:text-3xl dark:text-white">Frequently asked questions.</h1>
 
