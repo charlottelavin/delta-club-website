@@ -61,20 +61,20 @@ export default function Home() {
   
   return (
     <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col items-stretch" >
-        <nav className="bg-white shadow-md p-4">
-            <div className="max-w-7xl mx-auto flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold text-blue-600">
-                    Delta Club
-                </Link>
-                <div className="flex items-center space-x-10">
-                    <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
-                    <a href="contribute" className="text-gray-700 hover:text-blue-600 text-lg">Contribute</a>
-                    <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
-                        Sign In
-                    </button>
-                </div>
-            </div>
-        </nav>
+          <nav className="bg-white shadow-xl p-4">
+              <div className="max-w-7xl mx-auto flex justify-between items-center">
+                  <Link href="/" className="text-2xl font-bold text-blue-600">
+                      Delta Club
+                  </Link>
+                  <div className="flex items-center space-x-10">
+                      <a href="events" className="text-gray-700 hover:text-blue-600 text-lg">Database</a>
+                      <a href="contribute" className="text-gray-700 hover:text-blue-600 text-lg">Contribute</a>
+                      <button className="invisible px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition">
+                          Sign In
+                      </button>
+                  </div>
+              </div>
+          </nav>
 
       <section className="relative w-full h-screen bg-cover bg-center">
         <div 
@@ -122,11 +122,11 @@ export default function Home() {
           <h2 className="text-4xl font-semibold text-blue-600">How to Record Hours</h2>
           <p className="mt-4 text-xl justify-self-center">Follow these simple steps to ensure your volunteer hours are counted:</p>
           <ul className="mt-6 space-y-4 text-lg text-gray-700 justify-self-center">
-            <li>✅ Sign up and attend a Delta Club event.</li>
-            <li>✅ Take pictures while completing your activity.</li>
-            <li>✅ Write a post on Unrulr about your event.</li>
-            <li>✅ Congrats! Your hours have been recorded!</li>
-            <div className="mt-6">
+            <li>Sign up and attend a Delta Club event.</li>
+            <li>Take pictures while completing your activity.</li>
+            <li>Write a post on Unrulr about your event.</li>
+            <li>Congrats! Your hours have been recorded!</li>
+            <div className="mt-6 py-6">
               <a 
               href={"https://tinyurl.com/unrulrpost"}
               target="_blank"
@@ -134,24 +134,6 @@ export default function Home() {
               className="mt-6 border-2 border-blue-600 text-blue-600 font-bold px-6 py-4 rounded-lg hover:bg-blue-600 hover:text-white active:translate-y-1 active:shadow-none transition-all">View Unrulr Post Guide</a>
             </div>
           </ul>
-        </div>
-      </section>
-
-      <section id="gallery" className="py-16 bg-blue-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-semibold text-blue-600 text-center">Gallery</h2>
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            {[galleryImage, galleryImage2, galleryImage3].map((image, index) => (
-              <Image
-                key={index}
-                src={image}
-                alt="Gallery Image"
-                width={400}
-                height={300}
-                className="rounded-lg shadow-md"
-              />
-            ))}
-          </div>
         </div>
       </section>
 
