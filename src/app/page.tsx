@@ -1,9 +1,5 @@
 "use client"
 
-import Image from "next/image";
-import galleryImage from './images/ismael-paramo-Cns0h4ypRyA-unsplash.jpg'
-import galleryImage2 from './images/joel-muniz-A4Ax1ApccfA-unsplash.jpg'
-import galleryImage3 from './images/ray-sangga-kusuma-7uSrOyY1U0I-unsplash.jpg'
 import heroImage from './images/delta.jpg'
 import { useEffect, useState } from "react"
 import Link from 'next/link'
