@@ -10,7 +10,7 @@ export const events = pgTable('events', {
   featured: boolean('featured').default(false),
   address: text('address').notNull(),
   age: text('age').notNull(),
-  imageUrl: text('image_url'),
+  imageUrl: text('image_url'), // Will store Vercel Blob URLs
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
