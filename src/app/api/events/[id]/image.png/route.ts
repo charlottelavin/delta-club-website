@@ -1,5 +1,6 @@
-import Airtable, { Attachment } from "airtable";
-import { DELTA_CLUB_BASE_ID, DELTA_CLUB_EVENTS_TABLE_ID } from "../../../constants";
+import { db } from '../../../../../db';
+import { events } from '../../../../../db/schema';
+import { eq } from 'drizzle-orm';
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request,
@@ -8,15 +9,26 @@ export async function GET(request: Request,
     const id = (await params).id
     console.log("In image route", id)
 
-    const airtable = new Airtable({ apiKey: process.env['AIRTABLE_API_KEY'] })
-    const deltaClubBase = airtable.base(DELTA_CLUB_BASE_ID);
-    const eventsTable = deltaClubBase.table(DELTA_CLUB_EVENTS_TABLE_ID);
+    try {
+        // Fetch event from PostgreSQL database using Drizzle
+        const event = await db.select().from(events).where(eq(events.id, id)).limit(1);
+        
+        if (!event || event.length === 0) {
+            console.log("Event not found:", id);
+            return new NextResponse(null, { status: 404 });
+        }
 
-    const findResponse = await eventsTable.find(id)
-    if (!findResponse.fields.Image) {
-        return new NextResponse(null, {status: 404})
+        const eventData = event[0];
+        
+        if (!eventData.imageUrl) {
+            console.log("No image found for event:", id);
+            return new NextResponse(null, { status: 404 });
+        }
+
+        console.log("Redirecting to image:", eventData.imageUrl);
+        return NextResponse.redirect(eventData.imageUrl);
+    } catch (error) {
+        console.error("Error fetching event image:", error);
+        return new NextResponse(null, { status: 500 });
     }
-    console.log(findResponse.fields.Image)
-    const images = findResponse.fields.Image as readonly Attachment[]
-    return NextResponse.redirect(images[0].url)
 }
