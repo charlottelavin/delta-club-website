@@ -14,6 +14,7 @@ type Event = {
     featured: boolean;
     address: string
     age: string
+    imageUrl: string
 };
 
 type ModalProps = {
@@ -31,7 +32,7 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                         <div className="img">
                             <div className="img-box h-full max-h-96">
-                                <img src={`/api/events/${event.id}/image.png`} className="h-full w-full object-cover rounded-lg" />
+                                <img src={event.imageUrl} className="h-full w-full object-cover rounded-lg" />
                             </div>
                         </div>
                         <div className="data flex flex-col justify-center">
@@ -88,7 +89,7 @@ function Event({ event, }: { event: Event;}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className={`bg-white p-6 rounded-lg shadow-xl w-auto ${event.featured ? "border-2 border-blue-600" : ""}`}>
-            <img src={`/api/events/${event.id}/image.png`} alt="Event Image" className="rounded-lg" />
+            <img src={event.imageUrl} alt="Event Image" className="rounded-lg" />
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <div className="flex mt-4 justify-between items-center">
                 <p className="text-gray-600 flex-1 mr-4">{event.committee}, {event.hours}</p>
