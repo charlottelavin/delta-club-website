@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
