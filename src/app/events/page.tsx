@@ -3,6 +3,41 @@
 import { useEffect, useState } from "react"
 import Link from 'next/link'
 
+// Function to convert time format (e.g., "2:30") to decimal hours (e.g., "2.5 hours")
+function formatHours(hours: string): string {
+    if (!hours || hours.trim() === '') return 'Hours Vary';
+    
+    // Handle formats like "2:30", "1:45", etc.
+    const timeMatch = hours.match(/^(\d+):(\d+)$/);
+    if (timeMatch) {
+        const hoursNum = parseInt(timeMatch[1]);
+        const minutesNum = parseInt(timeMatch[2]);
+        const decimalHours = hoursNum + (minutesNum / 60);
+        return `${decimalHours} hours`;
+    }
+    
+    // Handle formats like "2.5", "1.25", etc.
+    const decimalMatch = hours.match(/^(\d+\.?\d*)$/);
+    if (decimalMatch) {
+        const num = parseFloat(decimalMatch[1]);
+        if (!isNaN(num)) {
+            return `${num} hours`;
+        }
+    }
+    
+    // Handle formats like "2", "1", etc.
+    const wholeNumberMatch = hours.match(/^(\d+)$/);
+    if (wholeNumberMatch) {
+        const num = parseInt(wholeNumberMatch[1]);
+        if (!isNaN(num)) {
+            return `${num} hours`;
+        }
+    }
+    
+    // Return "Hours Vary" if no pattern matches
+    return 'Hours Vary';
+}
+
 // Define the Event type
 type Event = {
     id: string;
@@ -40,7 +75,7 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
                                 <p className="mb-4 text-lg leading-8 font-medium text-indigo-600">{event.committee}</p>
                                 <h2 className="font-manrope mb-2 text-3xl leading-10 font-bold text-gray-900 capitalize">{event.name}</h2>
                                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center">
-                                    <h6 className="font-manrope mr-5 border-gray-200 pr-5 text-2xl leading-9 font-semibold text-gray-900 sm:border-r">{event.hours}</h6>
+                                    <h6 className="font-manrope mr-5 border-gray-200 pr-5 text-2xl leading-9 font-semibold text-gray-900 sm:border-r">{formatHours(event.hours)}</h6>
                                 </div>
                                 <p className="mb-5 text-base font-normal text-gray-500">{event.description}</p>
                                 <ul className="mb-8 grid gap-y-4">
@@ -92,7 +127,7 @@ function Event({ event, }: { event: Event;}) {
             <img src={event.imageUrl} alt="Event Image" className="rounded-lg" />
             <h4 className="text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <div className="flex mt-4 justify-between items-center">
-                <p className="text-gray-600 flex-1 mr-4">{event.committee}, {event.hours}</p>
+                <p className="text-gray-600 flex-1 mr-4">{event.committee}, {formatHours(event.hours)}</p>
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="border-2 border-blue-600 text-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white active:translate-y-1 active:shadow-none transition-all whitespace-nowrap">
