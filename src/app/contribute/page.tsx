@@ -1,8 +1,14 @@
 "use client"
 
 import Link from 'next/link'
+import { useEffect } from 'react';
 
 export default function Home() {
+  
+  useEffect(() => {
+    // Set the page title
+    document.title = "Contribute - Delta Club";
+  }, []);
   
   return (
     <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col items-stretch" >

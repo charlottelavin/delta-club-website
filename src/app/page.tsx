@@ -40,7 +40,12 @@ function Event({event}: {event: Event}) {
 export default function Home() {
   const [events, setEvents] = useState<Event[] | 'loading'>('loading')
 
-    useEffect(() => {
+  useEffect(() => {
+    // Set the page title
+    document.title = "Delta Club - Empowering Through Service";
+  }, []);
+
+  useEffect(() => {
         async function fetchData() {
             const response = await fetch('/api/featured');
             if (response.ok) {

@@ -148,6 +148,11 @@ export default function Home() {
     const [selectedCommittee, setSelectedCommittee] = useState<string>("");
 
     useEffect(() => {
+        // Set the page title
+        document.title = "Volunteer Events - Delta Club";
+    }, []);
+
+    useEffect(() => {
         async function fetchData() {
             const response = await fetch('/api/events');
             if (response.ok) {
