@@ -10,7 +10,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/seed-database.ts"
+    "db:seed": "tsx scripts/seed-database.ts",
+    "upload-events": "tsx scripts/upload-events.ts",
+    "test-csv": "tsx scripts/test-csv-parsing.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
