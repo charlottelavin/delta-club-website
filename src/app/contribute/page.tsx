@@ -32,7 +32,7 @@ export default function Home() {
         <section id="volunteer-suggestions" className="py-8 sm:py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Suggest a Volunteering Opportunity</h2>
-            <p className="mb-4 sm:mb-6 text-sm sm:text-base">Have a great idea for a organization to partner with? We&apos;re always looking to add more events. Share your idea with us!</p>
+            <p className="mb-4 sm:mb-6 text-sm sm:text-base">Have a great idea for a organization to partner with? We&lsquo;re always looking to add more events. Share your idea with us!</p>
             <a href="https://forms.office.com/r/89ipxvpdb7" target="_blank" className="inline-block border-2 border-blue-600 text-blue-600 font-bold px-4 sm:px-6 py-2 rounded-lg hover:bg-blue-600 hover:text-white active:translate-y-1 active:shadow-none transition-all text-sm sm:text-base">Submit a Suggestion</a>
           </div>
         </section>
