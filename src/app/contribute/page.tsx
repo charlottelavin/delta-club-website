@@ -47,7 +47,7 @@ export default function Home() {
         <section id="committee-leader" className="py-8 sm:py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Become a Committee Leader</h2>
-            <p className="mb-4 sm:mb-6 text-sm sm:text-base">As a committee leader, you will be responsible for planning committee meetings (consisting of education around committee issues, guest speakers, indirect service projects, etc.); reaching out to organizations; planning and coordinating service opportunities (direct, indirect, advocacy); taking attendance; and monitoring members' engagement, including monitoring posts on the Unrulr app. Your attendance will be required for some committee opportunities. Committee leaders are expected to complete the same club membership requirements as other members.</p>
+            <p className="mb-4 sm:mb-6 text-sm sm:text-base">As a committee leader, you will be responsible for planning committee meetings (consisting of education around committee issues, guest speakers, indirect service projects, etc.); reaching out to organizations; planning and coordinating service opportunities (direct, indirect, advocacy); taking attendance; and monitoring members&apos; engagement, including monitoring posts on the Unrulr app. Your attendance will be required for some committee opportunities. Committee leaders are expected to complete the same club membership requirements as other members.</p>
           </div> 
         </section>
 
