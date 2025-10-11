@@ -214,10 +214,9 @@ export default function Home() {
                             <option value="Elderly">Elderly</option>
                             <option value="Disabilities">Disabilities</option>
                             <option value="Environment and Climate Change">Environment and Climate Change</option>
-                            <option value="Food Insecurity and Poverty">Food Insecurity and Poverty</option>
+                            <option value="Poverty and Food Insecurity">Poverty and Food Insecurity</option>
                             <option value="Health and Wellness">Health and Wellness</option>
                             <option value="Homelessness">Homelessness</option>
-                            <option value="Community and Culture">Community and Culture</option>
                         </select>
                     </div>
                 </aside>
