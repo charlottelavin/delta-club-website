@@ -21,7 +21,6 @@ body {
 }
 
 @layer utilities {
-  @variants responsive {
       .masonry {
           column-gap: 1.5em;
           column-count: 1;
@@ -37,6 +36,4 @@ body {
       .break-inside {
           break-inside: avoid;
       }
-
-  }
 }
