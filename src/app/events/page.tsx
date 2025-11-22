@@ -199,11 +199,7 @@ function parseAge(age: string): number | null {
         setSelectedCommittee(value);
     };
 
-    // Hours filter handler
-    const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setHoursFilter(parseFloat(value));
-    };
+
 
     // Filtering logic
     useEffect(() => {
