@@ -11,7 +11,7 @@ export default function Home() {
   }, []);
   
   return (
-    <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col items-stretch" >
+    <div className="bg-blue-100 text-gray-900 min-h-screen flex flex-col" >
         <nav className="bg-white shadow-xl p-4">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <Link href="/" className="text-2xl font-bold text-blue-600">
@@ -51,7 +51,7 @@ export default function Home() {
           </div> 
         </section>
 
-      <footer className="bg-blue-600 text-white text-center py-6">
+      <footer className="bg-blue-600 text-white text-center py-6 mt-auto">
         <p className="text-lg">© 2025 Delta Club | Empowering Through Service</p>
       </footer>
     </div>

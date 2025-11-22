@@ -1,39 +1,54 @@
 'use client'
 
 import { useEffect, useState } from "react"
+// Helper to parse hours string to a number, or null for 'Hours Vary'
+function parseHours(hours: string): number | null {
+    if (!hours || hours.trim() === '' || hours.toLowerCase().includes('vary')) return null;
+    const timeMatch = hours.match(/^(\d+):(\d+)$/);
+    if (timeMatch) {
+        const hoursNum = parseInt(timeMatch[1]);
+        const minutesNum = parseInt(timeMatch[2]);
+        return hoursNum + (minutesNum / 60);
+    }
+    const decimalMatch = hours.match(/^(\d+\.?\d*)$/);
+    if (decimalMatch) {
+        return parseFloat(decimalMatch[1]);
+    }
+    const wholeNumberMatch = hours.match(/^(\d+)$/);
+    if (wholeNumberMatch) {
+        return parseInt(wholeNumberMatch[1]);
+    }
+    return null;
+}
 import Link from 'next/link'
 
 // Function to convert time format (e.g., "2:30") to decimal hours (e.g., "2.5 hours")
 function formatHours(hours: string): string {
     if (!hours || hours.trim() === '') return 'Hours Vary';
-    
     // Handle formats like "2:30", "1:45", etc.
     const timeMatch = hours.match(/^(\d+):(\d+)$/);
     if (timeMatch) {
         const hoursNum = parseInt(timeMatch[1]);
         const minutesNum = parseInt(timeMatch[2]);
         const decimalHours = hoursNum + (minutesNum / 60);
-        return `${decimalHours} hours`;
+        return `${decimalHours} ${decimalHours === 1 ? 'hour' : 'hours'}`;
     }
-    
     // Handle formats like "2.5", "1.25", etc.
     const decimalMatch = hours.match(/^(\d+\.?\d*)$/);
     if (decimalMatch) {
         const num = parseFloat(decimalMatch[1]);
         if (!isNaN(num)) {
-            return `${num} hours`;
+            return `${num} ${num === 1 ? 'hour' : 'hours'}`;
         }
     }
-    
     // Handle formats like "2", "1", etc.
     const wholeNumberMatch = hours.match(/^(\d+)$/);
     if (wholeNumberMatch) {
         const num = parseInt(wholeNumberMatch[1]);
         if (!isNaN(num)) {
-            return `${num} hours`;
+            return `${num} ${num === 1 ? 'hour' : 'hours'}`;
         }
     }
-    
     // Return "Hours Vary" if no pattern matches
     return 'Hours Vary';
 }
@@ -146,6 +161,17 @@ export default function Home() {
     const [events, setEvents] = useState<Event[] | 'loading'>('loading');
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [selectedCommittee, setSelectedCommittee] = useState<string>("");
+    // hoursFilter: null = 'Hours Vary', number = max hours
+    const [hoursFilter, setHoursFilter] = useState<number>(11 / 2); // default to max (5.5)
+    // ageFilter: number = max age allowed
+    const [ageFilter, setAgeFilter] = useState<number>(0); // default to 0 (all ages)
+// Helper to parse age string to a number, or null for 'All Ages'
+function parseAge(age: string): number | null {
+    if (!age || age.trim() === '' || age.toLowerCase().includes('all')) return null;
+    const match = age.match(/(\d+)/);
+    if (match) return parseInt(match[1]);
+    return null;
+}
 
     useEffect(() => {
         // Set the page title
@@ -166,21 +192,41 @@ export default function Home() {
         fetchData();
     }, []);
 
+
+    // Committee filter handler
     const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         setSelectedCommittee(value);
-
-        if (events !== 'loading') {
-            if (value === "") {
-                setFilteredEvents(events); // Reset to full list
-            } else {
-                setFilteredEvents(events.filter(event => event.committee === value));
-            }
-        }
     };
 
+    // Hours filter handler
+    const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setHoursFilter(parseFloat(value));
+    };
+
+    // Filtering logic
+    useEffect(() => {
+        if (events === 'loading') return;
+        let filtered = events;
+        if (selectedCommittee) {
+            filtered = filtered.filter(event => event.committee === selectedCommittee);
+        }
+        // Hours filter: always show 'Hours Vary' events, filter others by slider
+        filtered = filtered.filter(event => {
+            const eventHours = parseHours(event.hours);
+            return eventHours === null || eventHours <= hoursFilter;
+        });
+        // Age filter: always show 'All Ages' events, filter others by slider
+        filtered = filtered.filter(event => {
+            const eventAge = parseAge(event.age);
+            return eventAge === null || eventAge <= ageFilter;
+        });
+        setFilteredEvents(filtered);
+    }, [events, selectedCommittee, hoursFilter, ageFilter]);
+
     return (
-        <div className="bg-white">
+        <div className="bg-white min-h-screen flex flex-col">
             <nav className="bg-white shadow-xl p-4">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                     <Link href="/" className="text-2xl font-bold text-blue-600">
@@ -219,6 +265,56 @@ export default function Home() {
                             <option value="Homelessness">Homelessness</option>
                         </select>
                     </div>
+                    {/* Hours Filter */}
+                    <div className="mt-6">
+                        <label className="block text-black font-semibold text-sm sm:text-base mb-2">Hours</label>
+                        <div className="flex items-center gap-3">
+                            <span className="text-xs sm:text-sm text-black">Vary</span>
+                            <input
+                                type="range"
+                                min={0}
+                                max={11}
+                                step={1}
+                                value={Math.round(hoursFilter * 2)}
+                                onChange={e => {
+                                    const val = parseInt(e.target.value);
+                                    setHoursFilter(val / 2);
+                                }}
+                                className="flex-1 accent-blue-600"
+                                aria-label="Hours filter slider"
+                            />
+                            <span className="text-xs sm:text-sm text-black">5.5</span>
+                        </div>
+                        <div className="mt-1 text-xs text-gray-600">
+                            {hoursFilter === 0
+                                ? 'Hours Vary'
+                                : `${hoursFilter} ${hoursFilter === 1 ? 'hour' : 'hours'} or less`}
+                        </div>
+                    </div>
+                    {/* Age Filter */}
+                    <div className="mt-6">
+                        <label className="block text-black font-semibold text-sm sm:text-base mb-2">Ages</label>
+                        <div className="flex items-center gap-3">
+                            <span className="text-xs sm:text-sm text-black">All</span>
+                            <input
+                                type="range"
+                                min={0}
+                                max={18}
+                                step={1}
+                                value={ageFilter}
+                                onChange={e => {
+                                    const val = parseInt(e.target.value);
+                                    setAgeFilter(val);
+                                }}
+                                className="flex-1 accent-blue-600"
+                                aria-label="Age filter slider"
+                            />
+                            <span className="text-xs sm:text-sm text-black">18</span>
+                        </div>
+                        <div className="mt-1 text-xs text-gray-600">
+                            {ageFilter === 0 ? 'All Ages' : `${ageFilter}+ allowed`}
+                        </div>
+                    </div>
                 </aside>
 
                 {/* Main Section */}
@@ -242,7 +338,7 @@ export default function Home() {
                 </section>
             </div>
 
-            <footer className="bg-blue-600 text-white text-center py-6">
+            <footer className="bg-blue-600 text-white text-center py-6 mt-auto">
                 <p className="text-lg">© 2025 Delta Club | Empowering Through Service</p>
             </footer>
         </div>
