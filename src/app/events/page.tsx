@@ -206,7 +206,7 @@ function parseAge(age: string): number | null {
                 const parsedAge = parseInt(ageParam);
                 setAgeFilter(Number.isNaN(parsedAge) ? 0 : parsedAge);
             }
-        } catch (err) {
+        } catch {
             // ignore and keep defaults
         }
         // only run on mount / when search params change
@@ -256,7 +256,7 @@ function parseAge(age: string): number | null {
             const pathname = window.location.pathname;
             if (qs) router.replace(`${pathname}?${qs}`);
             else router.replace(pathname);
-        } catch (err) {
+        } catch {
             // fallback: do nothing
         }
     };
