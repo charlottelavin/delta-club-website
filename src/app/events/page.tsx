@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from 'next/navigation'
 // Helper to parse hours string to a number, or null for 'Hours Vary'
 function parseHours(hours: string): number | null {
     if (!hours || hours.trim() === '' || hours.toLowerCase().includes('vary')) return null;
@@ -165,6 +166,9 @@ export default function Home() {
     const [hoursFilter, setHoursFilter] = useState<number>(11 / 2); // default to max (5.5)
     // ageFilter: number = max age allowed
     const [ageFilter, setAgeFilter] = useState<number>(0); // default to 0 (all ages)
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const DEFAULT_HOURS = 5.5;
 // Helper to parse age string to a number, or null for 'All Ages'
 function parseAge(age: string): number | null {
     if (!age || age.trim() === '' || age.toLowerCase().includes('all')) return null;
@@ -177,6 +181,36 @@ function parseAge(age: string): number | null {
         // Set the page title
         document.title = "Volunteer Events - Delta Club";
     }, []);
+
+    // Initialize filter state from URL query params so links are shareable
+    useEffect(() => {
+        try {
+            const committeeParam = searchParams?.get('committee') ?? '';
+            const hoursParam = searchParams?.get('hours');
+            const ageParam = searchParams?.get('age');
+
+            setSelectedCommittee(committeeParam);
+
+            if (hoursParam === 'vary') {
+                setHoursFilter(0);
+            } else if (hoursParam != null) {
+                const parsed = parseFloat(hoursParam);
+                setHoursFilter(Number.isNaN(parsed) ? DEFAULT_HOURS : parsed);
+            } else {
+                setHoursFilter(DEFAULT_HOURS);
+            }
+
+            if (ageParam === 'all' || ageParam == null) {
+                setAgeFilter(0);
+            } else {
+                const parsedAge = parseInt(ageParam);
+                setAgeFilter(Number.isNaN(parsedAge) ? 0 : parsedAge);
+            }
+        } catch (err) {
+            // ignore and keep defaults
+        }
+        // only run on mount / when search params change
+    }, [searchParams]);
 
     useEffect(() => {
         async function fetchData() {
@@ -193,10 +227,56 @@ function parseAge(age: string): number | null {
     }, []);
 
 
+    // Update URL query params without adding history entries
+    const updateUrl = (params: { committee?: string; hours?: number | null; age?: number | null }) => {
+        try {
+            const current = new URLSearchParams(Array.from(searchParams ?? new URLSearchParams()));
+
+            if (params.committee !== undefined) {
+                if (params.committee) current.set('committee', params.committee);
+                else current.delete('committee');
+            }
+
+            if (params.hours !== undefined) {
+                if (params.hours === null) {
+                    current.set('hours', 'vary');
+                } else if (params.hours === DEFAULT_HOURS) {
+                    current.delete('hours');
+                } else {
+                    current.set('hours', String(params.hours));
+                }
+            }
+
+            if (params.age !== undefined) {
+                if (params.age === 0 || params.age === null) current.delete('age');
+                else current.set('age', String(params.age));
+            }
+
+            const qs = current.toString();
+            const pathname = window.location.pathname;
+            if (qs) router.replace(`${pathname}?${qs}`);
+            else router.replace(pathname);
+        } catch (err) {
+            // fallback: do nothing
+        }
+    };
+
     // Committee filter handler
     const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         setSelectedCommittee(value);
+        updateUrl({ committee: value });
+    };
+
+    const handleHoursChange = (valUnits: number) => {
+        const val = valUnits / 2;
+        setHoursFilter(val);
+        updateUrl({ hours: val });
+    };
+
+    const handleAgeChange = (val: number) => {
+        setAgeFilter(val);
+        updateUrl({ age: val });
     };
 
 
@@ -272,10 +352,7 @@ function parseAge(age: string): number | null {
                                 max={11}
                                 step={1}
                                 value={Math.round(hoursFilter * 2)}
-                                onChange={e => {
-                                    const val = parseInt(e.target.value);
-                                    setHoursFilter(val / 2);
-                                }}
+                                onChange={e => handleHoursChange(parseInt(e.target.value))}
                                 className="flex-1 accent-blue-600"
                                 aria-label="Hours filter slider"
                             />
@@ -298,10 +375,7 @@ function parseAge(age: string): number | null {
                                 max={18}
                                 step={1}
                                 value={ageFilter}
-                                onChange={e => {
-                                    const val = parseInt(e.target.value);
-                                    setAgeFilter(val);
-                                }}
+                                onChange={e => handleAgeChange(parseInt(e.target.value))}
                                 className="flex-1 accent-blue-600"
                                 aria-label="Age filter slider"
                             />
