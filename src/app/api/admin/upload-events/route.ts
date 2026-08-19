@@ -1,8 +1,9 @@
 import { parse } from 'csv-parse/sync';
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
-import { db } from '@/db';
 import { events } from '@/db/schema';
+
+export const dynamic = 'force-dynamic';
 
 interface CSVEvent {
   name: string;
@@ -37,6 +38,7 @@ async function downloadImageAsBlob(imageUrl: string): Promise<string> {
 
 export async function POST(request: Request) {
   try {
+    const { db } = await import('@/db');
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     if (!file) {

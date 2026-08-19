@@ -24,31 +24,32 @@ function parseHours(hours: string): number | null {
     return null;
 }
 
-// Function to convert time format (e.g., "2:30") to decimal hours (e.g., "2.5 hours")
+// Convert stored decimal or H:MM durations into readable hour/minute text.
 function formatHours(hours: string): string {
     if (!hours || hours.trim() === '') return 'Hours Vary';
     const timeMatch = hours.match(/^(\d+):(\d+)$/);
     if (timeMatch) {
-        const hoursNum = parseInt(timeMatch[1]);
-        const minutesNum = parseInt(timeMatch[2]);
-        const decimalHours = hoursNum + (minutesNum / 60);
-        return `${decimalHours} ${decimalHours === 1 ? 'hour' : 'hours'}`;
+        return formatDuration(parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]));
     }
     const decimalMatch = hours.match(/^(\d+\.?\d*)$/);
     if (decimalMatch) {
         const num = parseFloat(decimalMatch[1]);
         if (!isNaN(num)) {
-            return `${num} ${num === 1 ? 'hour' : 'hours'}`;
-        }
-    }
-    const wholeNumberMatch = hours.match(/^(\d+)$/);
-    if (wholeNumberMatch) {
-        const num = parseInt(wholeNumberMatch[1]);
-        if (!isNaN(num)) {
-            return `${num} ${num === 1 ? 'hour' : 'hours'}`;
+            return formatDuration(Math.round(num * 60));
         }
     }
     return 'Hours Vary';
+}
+
+function formatDuration(totalMinutes: number): string {
+    const hoursPart = Math.floor(totalMinutes / 60);
+    const minutesPart = totalMinutes % 60;
+    const parts: string[] = [];
+
+    if (hoursPart > 0) parts.push(`${hoursPart} ${hoursPart === 1 ? 'hour' : 'hours'}`);
+    if (minutesPart > 0) parts.push(`${minutesPart} ${minutesPart === 1 ? 'minute' : 'minutes'}`);
+
+    return parts.length > 0 ? parts.join(' and ') : '0 minutes';
 }
 
 // Define the Event type
@@ -80,7 +81,7 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
                     <div className="grid grid-cols-1 gap-4 sm:gap-8 lg:grid-cols-2">
                         <div className="img">
                             <div className="img-box h-48 sm:h-64 lg:h-96">
-                                <img src={event.imageUrl} className="h-full w-full object-cover rounded-lg" />
+                                <img src={event.imageUrl} alt={event.name} className="h-full w-full object-cover rounded-lg" />
                             </div>
                         </div>
                         <div className="data flex flex-col justify-center">
@@ -93,14 +94,14 @@ function Modal({ isOpen, onClose, event}: ModalProps) {
                                 <p className="mb-4 sm:mb-5 text-sm sm:text-base font-normal text-gray-500">{event.description}</p>
                                 <ul className="mb-6 sm:mb-8 grid gap-y-2 sm:gap-y-4">
                                     <li className="flex items-center gap-2 sm:gap-3">
-                                        <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-6 sm:h-6">
+                                        <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 sm:h-6 sm:w-6">
                                             <rect width="26" height="26" rx="13" fill="#4F46E5" />
                                             <path d="M7.66669 12.629L10.4289 15.3913C10.8734 15.8357 11.0956 16.0579 11.3718 16.0579C11.6479 16.0579 11.8701 15.8357 12.3146 15.3913L18.334 9.37183" stroke="white" stroke-width="1.6" stroke-linecap="round" />
                                         </svg>
                                         <span className="text-sm sm:text-base font-normal text-gray-900">{event.age}</span>
                                     </li>
                                     <li className="flex items-center gap-2 sm:gap-3">
-                                        <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-6 sm:h-6">
+                                        <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 sm:h-6 sm:w-6">
                                             <rect width="26" height="26" rx="13" fill="#4F46E5" />
                                             <path d="M7.66669 12.629L10.4289 15.3913C10.8734 15.8357 11.0956 16.0579 11.3718 16.0579C11.6479 16.0579 11.8701 15.8357 12.3146 15.3913L18.334 9.37183" stroke="white" stroke-width="1.6" stroke-linecap="round" />
                                         </svg>
@@ -137,7 +138,7 @@ function Event({ event, }: { event: Event;}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className={`bg-white p-4 sm:p-6 rounded-lg shadow-xl w-full ${event.featured ? "border-2 border-blue-600" : ""}`}>
-            <img src={event.imageUrl} alt="Event Image" className="rounded-lg w-full h-48 sm:h-56 object-cover" />
+            <img src={event.imageUrl} alt={event.name} className="rounded-lg w-full h-48 sm:h-56 object-cover" />
             <h4 className="text-lg sm:text-xl font-semibold mt-4 text-black">{event.name}</h4>
             <div className="flex flex-col sm:flex-row mt-4 justify-between items-start sm:items-center gap-2">
                 <p className="text-gray-600 text-sm sm:text-base flex-1">{event.committee}, {formatHours(event.hours)}</p>
@@ -159,13 +160,13 @@ export default function EventsClient() {
     const [events, setEvents] = useState<Event[] | 'loading'>('loading');
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [selectedCommittee, setSelectedCommittee] = useState<string>("");
-    // hoursFilter: null = 'Hours Vary', number = max hours
-    const [hoursFilter, setHoursFilter] = useState<number>(11 / 2); // default to max (5.5)
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    // null = any duration, number = maximum duration
+    const [hoursFilter, setHoursFilter] = useState<number | null>(null);
     // ageFilter: number = max age allowed
     const [ageFilter, setAgeFilter] = useState<number>(0); // default to 0 (all ages)
     const router = useRouter();
     const searchParams = useSearchParams();
-    const DEFAULT_HOURS = 5.5;
 
 // Helper to parse age string to a number, or null for 'All Ages'
 function parseAge(age: string): number | null {
@@ -186,16 +187,18 @@ function parseAge(age: string): number | null {
             const committeeParam = searchParams?.get('committee') ?? '';
             const hoursParam = searchParams?.get('hours');
             const ageParam = searchParams?.get('age');
+            const searchParam = searchParams?.get('search') ?? '';
 
             setSelectedCommittee(committeeParam);
+            setSearchQuery(searchParam);
 
             if (hoursParam === 'vary') {
                 setHoursFilter(0);
             } else if (hoursParam != null) {
                 const parsed = parseFloat(hoursParam);
-                setHoursFilter(Number.isNaN(parsed) ? DEFAULT_HOURS : parsed);
+                setHoursFilter(Number.isNaN(parsed) ? null : parsed);
             } else {
-                setHoursFilter(DEFAULT_HOURS);
+                setHoursFilter(null);
             }
 
             if (ageParam === 'all' || ageParam == null) {
@@ -212,7 +215,7 @@ function parseAge(age: string): number | null {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await fetch('/api/events');
+            const response = await fetch('/api/events', { cache: 'no-store' });
             if (response.ok) {
                 const responseData: Event[] = await response.json();
                 setEvents(responseData);
@@ -226,7 +229,7 @@ function parseAge(age: string): number | null {
 
 
     // Update URL query params without adding history entries
-    const updateUrl = (params: { committee?: string; hours?: number | null; age?: number | null }) => {
+    const updateUrl = (params: { committee?: string; hours?: number | null; age?: number | null; search?: string }) => {
         try {
             const current = new URLSearchParams(Array.from(searchParams ?? new URLSearchParams()));
 
@@ -236,9 +239,9 @@ function parseAge(age: string): number | null {
             }
 
             if (params.hours !== undefined) {
-                if (params.hours === null) {
+                if (params.hours === 0) {
                     current.set('hours', 'vary');
-                } else if (params.hours === DEFAULT_HOURS) {
+                } else if (params.hours === null) {
                     current.delete('hours');
                 } else {
                     current.set('hours', String(params.hours));
@@ -248,6 +251,11 @@ function parseAge(age: string): number | null {
             if (params.age !== undefined) {
                 if (params.age === 0 || params.age === null) current.delete('age');
                 else current.set('age', String(params.age));
+            }
+
+            if (params.search !== undefined) {
+                if (params.search.trim()) current.set('search', params.search.trim());
+                else current.delete('search');
             }
 
             const qs = current.toString();
@@ -266,15 +274,22 @@ function parseAge(age: string): number | null {
         updateUrl({ committee: value });
     };
 
-    const handleHoursChange = (valUnits: number) => {
-        const val = valUnits / 2;
+    const handleHoursChange = (value: string) => {
+        const val = value === '' ? null : parseFloat(value);
         setHoursFilter(val);
         updateUrl({ hours: val });
     };
 
-    const handleAgeChange = (val: number) => {
+    const handleAgeChange = (value: string) => {
+        const val = value === '' ? 0 : parseInt(value, 10);
         setAgeFilter(val);
         updateUrl({ age: val });
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+        updateUrl({ search: value });
     };
 
 
@@ -284,13 +299,20 @@ function parseAge(age: string): number | null {
     useEffect(() => {
         if (events === 'loading') return;
         let filtered = events;
+        const normalizedSearch = searchQuery.trim().toLowerCase();
+        if (normalizedSearch) {
+            filtered = filtered.filter(event =>
+                [event.name, event.committee, event.description, event.address, event.age]
+                    .some(value => value?.toLowerCase().includes(normalizedSearch))
+            );
+        }
         if (selectedCommittee) {
             filtered = filtered.filter(event => event.committee === selectedCommittee);
         }
-        // Hours filter: always show 'Hours Vary' events, filter others by slider
+        // Hours Vary events remain visible whenever a duration limit is selected.
         filtered = filtered.filter(event => {
             const eventHours = parseHours(event.hours);
-            return eventHours === null || eventHours <= hoursFilter;
+            return eventHours === null || hoursFilter === null || eventHours <= hoursFilter;
         });
         // Age filter: always show 'All Ages' events, filter others by slider
         filtered = filtered.filter(event => {
@@ -298,7 +320,7 @@ function parseAge(age: string): number | null {
             return eventAge === null || eventAge <= ageFilter;
         });
         setFilteredEvents(filtered);
-    }, [events, selectedCommittee, hoursFilter, ageFilter]);
+    }, [events, searchQuery, selectedCommittee, hoursFilter, ageFilter]);
 
     return (
         <div className="bg-white min-h-screen flex flex-col">
@@ -342,53 +364,58 @@ function parseAge(age: string): number | null {
                     </div>
                     {/* Hours Filter */}
                     <div className="mt-6">
-                        <label className="block text-black font-semibold text-sm sm:text-base mb-2">Hours</label>
-                        <div className="flex items-center gap-3">
-                            <span className="text-xs sm:text-sm text-black">Vary</span>
-                            <input
-                                type="range"
-                                min={0}
-                                max={11}
-                                step={1}
-                                value={Math.round(hoursFilter * 2)}
-                                onChange={e => handleHoursChange(parseInt(e.target.value))}
-                                className="flex-1 accent-blue-600"
-                                aria-label="Hours filter slider"
-                            />
-                            <span className="text-xs sm:text-sm text-black">5.5</span>
-                        </div>
-                        <div className="mt-1 text-xs text-gray-600">
-                            {hoursFilter === 0
-                                ? 'Hours Vary'
-                                : `${hoursFilter} ${hoursFilter === 1 ? 'hour' : 'hours'} or less`}
-                        </div>
+                        <label htmlFor="hours-filter" className="block text-black font-semibold text-sm sm:text-base mb-2">Hours</label>
+                        <select
+                            id="hours-filter"
+                            value={hoursFilter === null ? '' : hoursFilter === 0 ? 'vary' : String(hoursFilter)}
+                            onChange={e => handleHoursChange(e.target.value === 'vary' ? '0' : e.target.value)}
+                            className="w-full p-2 border rounded-lg text-black text-sm sm:text-base"
+                        >
+                            <option value="">Any duration</option>
+                            <option value="vary">Hours vary</option>
+                            <option value="1">1 hour or less</option>
+                            <option value="2">2 hours or less</option>
+                            <option value="3">3 hours or less</option>
+                            <option value="4">4 hours or less</option>
+                            <option value="5">5 hours or less</option>
+                            <option value="5.5">5 hours 30 minutes or less</option>
+                        </select>
                     </div>
                     {/* Age Filter */}
                     <div className="mt-6">
-                        <label className="block text-black font-semibold text-sm sm:text-base mb-2">Ages</label>
-                        <div className="flex items-center gap-3">
-                            <span className="text-xs sm:text-sm text-black">All</span>
-                            <input
-                                type="range"
-                                min={0}
-                                max={18}
-                                step={1}
-                                value={ageFilter}
-                                onChange={e => handleAgeChange(parseInt(e.target.value))}
-                                className="flex-1 accent-blue-600"
-                                aria-label="Age filter slider"
-                            />
-                            <span className="text-xs sm:text-sm text-black">18</span>
-                        </div>
-                        <div className="mt-1 text-xs text-gray-600">
-                            {ageFilter === 0 ? 'All Ages' : `${ageFilter}+ allowed`}
-                        </div>
+                        <label htmlFor="age-filter" className="block text-black font-semibold text-sm sm:text-base mb-2">Ages</label>
+                        <select
+                            id="age-filter"
+                            value={ageFilter === 0 ? '' : String(ageFilter)}
+                            onChange={e => handleAgeChange(e.target.value)}
+                            className="w-full p-2 border rounded-lg text-black text-sm sm:text-base"
+                        >
+                            <option value="">All ages</option>
+                            <option value="5">Age 5+</option>
+                            <option value="8">Age 8+</option>
+                            <option value="10">Age 10+</option>
+                            <option value="12">Age 12+</option>
+                            <option value="14">Age 14+</option>
+                            <option value="16">Age 16+</option>
+                            <option value="18">Age 18+</option>
+                        </select>
                     </div>
                 </aside>
 
                 {/* Main Section */}
                 <section className="w-full lg:w-3/4">
                     <h3 className="text-2xl sm:text-3xl font-semibold text-blue-600 mt-4 lg:mt-10">Available Volunteer Events</h3>
+                    <div className="mt-4">
+                        <label htmlFor="event-search" className="block text-black font-semibold text-sm sm:text-base">Search events</label>
+                        <input
+                            id="event-search"
+                            type="search"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            placeholder="Name, committee, or location"
+                            className="w-full mt-2 rounded-lg border p-2 text-black text-sm sm:text-base"
+                        />
+                    </div>
                     <div className="container mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mt-6 mb-6">
                             {events === 'loading' ? (
@@ -400,7 +427,7 @@ function parseAge(age: string): number | null {
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-gray-600 mt-4 col-span-full">No events found for this committee.</div>
+                                <div className="text-gray-600 mt-4 col-span-full">No events match your current search and filters.</div>
                             )}
                         </div>
                     </div>

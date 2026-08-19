@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server"
-import { db } from '../../../db'
 import { events } from '../../../db/schema'
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
+        const { db } = await import('../../../db');
         console.log("Fetching events from PostgreSQL database")
         
         const allEvents = await db.select().from(events);
@@ -23,7 +25,9 @@ export async function GET() {
             age: event.age,
         }))
 
-        return NextResponse.json(formattedEvents)
+        return NextResponse.json(formattedEvents, {
+            headers: { 'Cache-Control': 'no-store' },
+        })
     } catch (error) {
         console.error('Error fetching events:', error)
         return NextResponse.json(

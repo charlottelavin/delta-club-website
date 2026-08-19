@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server"
-import { db } from '../../../db'
 import { events } from '../../../db/schema'
 import { eq } from 'drizzle-orm'
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
+        const { db } = await import('../../../db');
         console.log("Fetching featured events from PostgreSQL database")
         
         const featuredEvents = await db.select().from(events).where(eq(events.featured, true));
