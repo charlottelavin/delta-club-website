@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { events } from '@/db/schema';
 
 export const dynamic = 'force-dynamic';
@@ -8,6 +9,8 @@ function getText(formData: FormData, field: string): string {
 }
 
 export async function POST(request: Request) {
+  await auth.protect({ permission: 'org:basic:events_upload' });
+
   try {
     const formData = await request.formData();
     const name = getText(formData, 'name');

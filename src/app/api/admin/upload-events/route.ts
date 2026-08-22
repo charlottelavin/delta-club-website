@@ -1,6 +1,7 @@
 import { parse } from 'csv-parse/sync';
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { events } from '@/db/schema';
 
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,8 @@ async function downloadImageAsBlob(imageUrl: string): Promise<string> {
 }
 
 export async function POST(request: Request) {
+  await auth.protect({ permission: 'org:basic:events_upload' });
+
   try {
     const { db } = await import('@/db');
     const formData = await request.formData();
